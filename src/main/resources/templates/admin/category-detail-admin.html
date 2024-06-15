@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- CSS only -->
+<!-- Font Awesome -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+	<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js">
+	<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+<!-- JavaScript Bundle with Popper -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<title>Danh mục</title>
+<style>
+body {
+    background: rgb(255, 228, 224)
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #BA68C8
+}
+
+.profile-button {
+    background: rgb(99, 39, 120);
+    box-shadow: none;
+    border: none
+}
+
+.profile-button:hover {
+    background: #682773
+}
+
+.profile-button:focus {
+    background: #682773;
+    box-shadow: none
+}
+
+.profile-button:active {
+    background: #682773;
+    box-shadow: none
+}
+
+.back:hover {
+    color: #682773;
+    cursor: pointer
+}
+
+.labels {
+    font-size: 12px
+}
+
+
+
+
+</style>
+</head>
+<body>
+<form th:object="${category}"
+			th:action="@{/viewcategory/save/{id}(id=${category.id})}" id="detail-form" th:method="${category.id} < 1 ? POST : PUT" enctype="multipart/form-data">
+	<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-7 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="text-right">Quản lý danh mục</h3>
+                </div>
+                <div class="row mt-2">
+                    
+                    <div class="col-md-6"><label class="labels">Tên danh mục</label>
+                    <th:block th:with="readOnlyFlag=${category.id &gt; 0}">
+                    <input type="text" class="form-control" name="name" id="name"
+						placeholder="Tên danh mục" th:value="${category.name}" th:readonly="${readOnlyFlag}" required></div>
+                </div>
+                
+                
+                <div class="mt-2 text-center"><small style=" color: red; font-size: 20px" th:if="${param.mess != null}" th:text="${param.mess}"></small>
+</div>
+            </div>
+        </div>
+        
+        <div class="col-md-5 border-right">
+        <div class="mt-4">
+        	<th:block th:with="readOnlyFlag=${category.id &gt; 0}">
+        	<input type="file" id="upload" name="upload" class="form-control custom-file" accept="image/*">
+        </div>
+            <div class="d-flex flex-column align-items-center text-center p-3 py-3"><img class="img-fluid "  th:src="${category.img}" alt="Category cover" onerror="this.style.border='1px solid '; this.style.width='450px'; this.style.height='500px';"></div>
+        </div>
+ 
+    </div>
+</div>
+<footer class="footer fixed-bottom">
+   <div class="container">
+      <div class="row justify-content-end">
+      <div class="col-auto order-last">
+            <a href="/adminCategory" class="btn btn-success btn-lg position-fixed" style="bottom: 40px; left: 90px;"><i class="fa fa-arrow-left" style="margin-right: 4px"></i>Trở về</a>
+         </div>
+         <div class="col-auto">
+         	<th:block th:with="readOnlyFlag=${category.id &gt; 0}">
+            <button type="button" id = "edit" class="btn btn-primary btn-lg profile-button position-fixed" style="bottom: 40px; right: 90px;" >Chỉnh sửa</button>
+            <button type="submit" id = "save" class="btn btn-primary btn-lg profile-button position-fixed" style="bottom: 40px; right: 90px; display:none" onclick=" return confirm('Bạn có chắc chắn muốn lưu thay đổi này?')">Lưu chỉnh sửa</button>
+            <button type="submit" id = "add" class="btn btn-primary btn-lg profile-button position-fixed" style="bottom: 40px; right: 90px;" th:if="${category.id == 0 }" onclick=" return confirm('Bạn có chắc chắn muốn thêm mới danh mục này?')">Thêm mới</button>
+            
+         </div>
+      </div>
+   </div>
+</footer>
+</form>
+
+	<script>
+
+
+const button = document.getElementById('edit');
+const button2 = document.getElementById('save');
+button.addEventListener('click', function() {
+  document.getElementById('name').readOnly = false;
+  button.style.display = 'none';
+  button2.style.display = 'block';
+});
+
+$(document).ready(function() {
+	  // Lắng nghe sự kiện tải lên từ input file
+	  $('input[type="file"]').on('change', function(event) {
+	    // Nhận đường dẫn của file đã chọn
+	    var file = event.target.files[0];
+	    var reader = new FileReader();
+	    reader.onload = function(event) {
+	      // Hiển thị hình ảnh bằng cách thiết lập thuộc tính src của thẻ img
+	      $('img').attr('src', event.target.result);
+	    };
+	    reader.readAsDataURL(file);
+	  });
+	});
+</script>
+
+
+</body>
+
+
+</html>

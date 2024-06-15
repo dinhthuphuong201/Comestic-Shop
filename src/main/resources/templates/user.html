@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<style>
+#button {
+  display: inline-block;
+  background-color: #FF9800;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  border-radius: 4px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  transition: background-color .3s, 
+    opacity .5s, visibility .5s;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+}
+#button::after {
+  content: "\f077";
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 2em;
+  line-height: 50px;
+  color: #fff;
+}
+#button:hover {
+  cursor: pointer;
+  background-color: #333;
+}
+#button:active {
+  background-color: #555;
+}
+#button.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-hover:hover {
+  background-color: #bdaea8 !important;
+  color: #007bff;
+}
+
+.mybtn-hover {
+    background-color: #007bff !important;
+    color: #ffffff;
+    transition: all 0.3s ease-in-out;
+}
+
+.mybtn-hover:hover {
+    background-color: #262424!important;
+    color: #007bff;
+    transform: scale(1.1);
+}
+</style>
+
+<title>CosmeticShop</title>
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+		<!-- Slick -->
+		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
+		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
+
+		<!-- nouislider -->
+		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+		
+		<!-- login -->
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+		<link href="tempcss/style.css" rel="stylesheet">
+			<!-- Libraries Stylesheet -->
+	    <link href="lib/animate/animate.min.css" rel="stylesheet">
+	    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+		
+		<!-- Nav bar -->
+		<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,700;0,800;1,200;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    	<link rel="stylesheet" href="asset/css/animate.css">   
+    	<link rel="stylesheet" href="asset/css/owl.theme.default.min.css">
+	    <link rel="stylesheet" href="asset/css/owl.carousel.min.css">
+	    <link rel="stylesheet" href="asset/css/magnific-popup.css">
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+	    <link rel="stylesheet" href="asset/css/flaticon.css">
+	    <link rel="stylesheet" href="asset/css/style.css">
+	    <script src= "https://kit.fontawesome.com/2961dbb4cf.js" crossorigin="anonymous">  </script>
+
+</head>
+<body>
+    <!-- nav bar start-->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="/home" style="margin-right:300px; margin-left:-50px">Camellia <span>shop</span></a>
+	      <div class="order-lg-last btn-group">
+          <a href="#" class="btn-cart dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          	<span class="flaticon-shopping-bag"></span>
+          	<div class="d-flex justify-content-center align-items-center" th:if="${session.size!=null}"><small>[[${session.size}]]</small></div>
+          	<div class="d-flex justify-content-center align-items-center" th:if="${session.size==null}"><small>0</small></div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" th:if="${session.cart!=null}">
+          		<th:block th:each="o:${session.cart.items}" >
+				    <div class="dropdown-item d-flex align-items-start" href="#">
+				    	<div class="img" th:style="'background-image: url(&quot;' + ${o.cosmetic.image} + '&quot;);'"></div>
+				    	<div class="text pl-3">
+				    		<h4>[[${o.cosmetic.title}]]</h4>
+				    		<p class="mb-0"><a href="#" class="price subtotal">[[${o.cosmetic.price}]]</a><span class="quantity ml-3">Số lượng: [[${o.quantity}]]</span></p>
+				    	</div>
+				    </div>
+				 </th:block>
+				    
+				    <a class="dropdown-item text-center btn-link d-block w-100" href="/addcart">
+				    	Xem giỏ hàng
+				    	<span class="ion-ios-arrow-round-forward"></span>
+				    </a>
+		 </div>
+		 <div class="dropdown-menu dropdown-menu-right" th:if="${session.cart==null}">
+				    
+				    <a class="dropdown-item text-center btn-link d-block w-100 btn-cart" href="#">
+				    	Chưa có sản phẩm nào được chọn
+				    	<span class="ion-ios-arrow-round-forward"></span>
+				    </a>
+		 </div>
+        </div>
+
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	        <li class="nav-item" style="margin-right:245px; margin-top:12px"><a  class="nav-link" >
+	        <div class="search-wrapper" >
+			    <div class="input-holder">
+			    <form th:action="@{/search}">
+			        <input type="text" class="search-input" name="search" th:value="${search}" placeholder="Tìm theo tên sản phẩm hoặc thương hiệu" required="1" />
+			        <button class="search-icon" onclick="searchToggle(this, event);"><span></span></button>
+			     </form>
+			    </div>
+			    <span class="close" onclick="searchToggle(this, event);"></span>
+			</div>
+	        </a></li>
+	          <li class="nav-item active"><a href="/home" class="nav-link" style="margin-left:20px; margin-right:10px">Home</a></li>
+
+	          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#category" id="dropdown04" >Danh mục</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04" >
+              <th:block th:each="o:${listC}">
+              	<a class="dropdown-item dropdown-hover" th:href="@{'/category?id='+${o.id}}">[[${o.name}]]</a>
+              </th:block>
+              </div>
+            </li>
+	          
+	          <li class="nav-item"><a th:href="@{/loginForm}" th:if="${session.account==null}" class="nav-link">Login</a></li>
+	          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="/profile" id="dropdown04" data-toggle="dropdown" th:if="${session.account!=null}"  aria-haspopup="true" aria-expanded="false" style="margin-right:21px">[[${session.account.username}]]</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04" th:if="${session.account!=null}">
+              	<a class="dropdown-item dropdown-hover" th:href="@{/logout}">Đăng xuất</a>
+              	<a class="dropdown-item dropdown-hover" th:href="@{/mypage}">Đơn hàng</a>
+              	<a class="dropdown-item dropdown-hover" th:href="@{/profile}">Quản lý tài khoản</a>
+              </div>
+            </li>
+            
+	        </ul>
+	      </div>
+	      
+	    </div>
+	  </nav>
+    <!-- END nav -->
+    
+    <div class="hero-wrap" style="background-image: url('/img/bg_2.jpg'); height: 550px" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-8 ftco-animate d-flex align-items-end" style="margin-bottom:130px">
+          	<div class="text w-100 text-center">
+	            <h1 class="mb-4">Tạo ra <span>Cái Đẹp</span> chính là một <span>Nghệ Thuật</span>.</h1>
+	            <p><a href="#product" class="btn btn-primary py-2 px-4 mybtn-hover">Mua ngay</a> <a href="#category" class="btn btn-white btn-outline-white py-2 px-4" style="margin-left:40px">Danh Mục</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <section class="ftco-section ftco-no-pb">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 img img-3 d-flex justify-content-center align-items-center" style="background-image: url(/img/bg_1.jpg);">
+					</div>
+					<div class="col-md-6 wrap-about pl-md-5 ftco-animate py-5">
+	          <div class="heading-section">
+	          	<span class="subheading">Từ 1957</span>
+	            <h2 class="mb-4">Shop mỹ phẩm hàng đầu</h2>
+
+	            <p>Camellia là đơn vị được xuất nhập khẩu trực tiếp các loại mỹ phẩm với hơn 1.000 phân loại sản phẩm và đảm bảo cho 5.000 người truy cập/giây.</p>
+	            <p>Camellia đã tạo được mối quan hệ tốt đẹp với hàng trăm công ty truyền thông văn hóa, các nhà cung cấp mỹ phẩm trong nước để nhập và phát hành hàng ngàn sản phẩm.</p>
+	            <p class="year">
+	            	<strong class="number" data-number="67">0</strong>
+		            <span>Năm hình thành và phát triển</span>
+	            </p>
+	          </div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+   <!-- Carousel Start -->
+    <div class="container-fluid mb-3 ftco-section ftco-no-pb" id="sale">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Ưu đãi</span></h2>
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#header-carousel" data-slide-to="1"></li>
+                        <li data-target="#header-carousel" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item position-relative active" style="height: 430px;">
+                            <img class="position-absolute w-100 h-100" src="https://bizweb.dktcdn.net/100/465/979/themes/885178/assets/cat-banner-1.jpg?1686535985657" style="object-fit: cover;">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Sự đối lập của Black (đen) và Rouge (đỏ)</h1>
+                                    <p class="mx-md-5 px-5 animate__animated animate__bounceIn">BLACK ROUGE sẽ giúp bạn thỏa sức sáng tạo, khẳng định cá tính cũng như gu thẩm mỹ của mình.</p>
+                                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/category?id=1">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item position-relative" style="height: 430px;">
+                            <img class="position-absolute w-100 h-100" src="https://adminbeauty.hvnet.vn/Upload/Files/phan-mat-3ce-17082018024844.jpg?v=001" style="object-fit: cover;">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Phấn mắt độc đáo</h1>
+                                    <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Đôi mắt là cửa sổ tâm hồn, làm đẹp cho đôi mắt</p>
+                                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/category?id=4">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item position-relative" style="height: 430px;">
+                            <img class="position-absolute w-100 h-100" src="https://myphamvina.net/uploads/images/banner-danh-muc.png" style="object-fit: cover;">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">SALE kem lót chào hè</h1>
+                                    <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Giảm đếm 60k và freeship 10k. Mua ngay!</p>
+                                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/category?id=3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="product-offer mb-30" style="height: 200px;">
+                    <img class="img-fluid" src="https://product.hstatic.net/1000296801/product/son-kem-3ce-cloud-lip-tint-2019_0cb35a2cdde54f429c37f854e826d772.jpg" alt="">
+                    <div class="offer-text">
+                        <h6 class="text-white text-uppercase">Giảm 20% son kem lì</h6>
+                        <h3 class="text-white mb-3">Ưu đãi đặc biệt</h3>
+                        <a href="/category?id=1" class="btn text-white" style="background-color:#67595E">Mua ngay</a>
+                    </div>
+                </div>
+                <div class="product-offer mb-30" style="height: 200px;">
+                    <img class="img-fluid" src="https://silkygirl.com.vn/wp-content/uploads/2022/12/316948131_3261595260824105_7249456727623300276_n.jpg" alt="">
+                    <div class="offer-text">
+                        <h6 class="text-white text-uppercase">Giảm 20% phấn mắt</h6>
+                        <h3 class="text-white mb-3">Ưu đãi đặc biệt</h3>
+                        <a href="/category?id=4" class="btn text-white" style="background-color:#67595E">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5 ftco-animate">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Cam kết</span></h2>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-check text-primary m-0 mr-3" style="font-size:40px"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Mỹ Phẩm chất lượng</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-truck text-primary m-0 mr-2" style="font-size:40px"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Giao hàng nhanh</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-exchange text-primary m-0 mr-3" style="font-size:40px"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Đổi trả trong 2 tuần</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-phone text-primary m-0 mr-3" style="font-size:40px"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Hỗ trợ 24/7</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+
+	<!-- Categories Start -->
+	
+    <div class="container-fluid pt-5 ftco-animate" id="category">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Danh mục sản phẩm</span></h2>
+        <div class="row px-xl-5 pb-3">
+        <th:block th:each="o:${listC}">
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                
+                <a class="text-decoration-none" th:href="@{'/category?id='+${o.id}}">
+                    <div class="cat-item d-flex align-items-center mb-4">
+                        <div class="overflow-hidden" style="width: 100px; height: 100px;">
+                            <img class="img-fluid" th:src="${o.img}" alt="">
+                        </div>
+                        <div class="flex-fill pl-3">
+                            <h6>[[${o.name}]]</h6>
+                            <small class="text-body" th:text="${o.sum} + ' Sản Phẩm'"></small>
+                        </div>
+                    </div>
+                </a>
+               
+            </div>
+            </th:block>
+            
+        </div>
+    </div>
+    
+    <!-- Categories End -->
+	
+	
+	
+	<!-- SECTION -->
+	<div class="section">
+		<!-- container -->
+		<div class="container-fluid" id="product">
+		<h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Danh sản phẩm sản phẩm</span></h2>
+			<!-- row -->
+			<div class="row">
+				<!-- shop -->
+				<th:block th:each="o:${listS}">
+					<div class="col-md-2 col-xs-6">
+						<div class="product">
+							<div style="margin: auto" class="product-img ftco-animate">
+								<a th:href="@{'/detail?id='+${o.id}}"><img
+									style="height: 200px; margin-top: 10px; width: 100%;"
+									th:src="${o.image}" alt=""></a>
+
+							</div>
+							<div class="product-body">
+								<div style="height: 30px" class="cosmetic-name">
+									<h3 class="product-name">
+										<a class="h6 text-decoration-none"  th:href="@{'/detail?id='+${o.id}}">[[${o.title}]]</a>
+									</h3>
+								</div>
+								<div class="d-flex align-items-center justify-content-center mt-2">
+                            		<h5 style="font-size:13px; margin-top:10px">Thương hiệu : [[${o.brand}]]</h5>
+                            		
+                        		</div>
+                        		<div class="d-flex align-items-center justify-content-center mt-2">
+                        		<h3 style="font-size: 15px; color:red; margin-top:25px; margin-right:7px">Giá: </h3>
+                        		<h3 style="font-size: 15px; color:red; margin-top:25px" class="subtotal">[[${o.price}]]</h3>
+                        		</div>
+							
+
+							</div>
+						</div>
+					</div>
+				</th:block>
+				<!-- /shop -->
+			</div>
+			<ul class="reviews-pagination">
+				<li th:if="${page>1}"><a th:href="@{'/home?page='+${page-1}}+'#product'"><i
+						class="fa fa-angle-left" style="color: #67595E;"></i></a></li>
+				<th:block th:each="o:${numlist}" >
+					<li style="background-color: #67595E;" class="active"
+						th:if="${o}==${page}">[[${o}]]</li>
+					<li th:if="${o}!=${page}"><a th:href="@{'/home?page='+${o}+'#product'}">[[${o}]]</a></li>
+				</th:block>
+				<li><a th:href="@{'/home?page='+${page+1}+'#product'}"><i
+						class="fa fa-angle-right" style="color: #67595E;"></i></a></li>
+			</ul>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+
+	<div class="section">
+		<!-- container -->
+		<div class="container-fluid">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-4 col-xs-6">
+					<div class="section-title">
+						<h4 class="title" style="text-transform: none; font-size: 17px">Top
+							Bán Chạy</h4>
+						<div class="section-nav">
+							<div id="slick-nav-4" class="products-slick-nav"></div>
+						</div>
+					</div>
+
+					<div class="products-widget-slick" data-nav="#slick-nav-4">
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT1}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT2}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-xs-6">
+					<div class="section-title">
+						<h4 class="title" style="text-transform: none; font-size: 17px">Top
+							Bán Chạy</h4>
+						<div class="section-nav">
+							<div id="slick-nav-3" class="products-slick-nav"></div>
+						</div>
+					</div>
+
+					<div class="products-widget-slick" data-nav="#slick-nav-3">
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT3}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT4}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+					</div>
+				</div>
+
+				<div class="clearfix visible-sm visible-xs"></div>
+
+				<div class="col-md-4 col-xs-6">
+					<div class="section-title">
+						<h4 class="title" style="text-transform: none; font-size: 17px">Top
+							Bán Chạy</h4>
+						<div class="section-nav">
+							<div id="slick-nav-5" class="products-slick-nav"></div>
+						</div>
+					</div>
+
+					<div class="products-widget-slick" data-nav="#slick-nav-5">
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT5}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+						<div>
+							<!-- product widget -->
+							<th:block th:each="o:${listT6}">
+								<div class="product-widget">
+									<div class="product-img">
+										<img th:src="${o.image}" alt="">
+									</div>
+									<div class="product-body">
+										<h3 class="product-name">
+											<a th:href="@{'/detail?id='+${o.id}}" style="color:black">[[${o.title}]]</a>
+										</h3>
+										<p class="product-category" style="text-transform: none">Tác
+											giả : [[${o.brand}]]</p>
+									</div>
+								</div>
+							</th:block>
+							<!-- /product widget -->
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /SECTION -->
+
+<a id="button"></a>
+
+			<footer class="footer">
+     <div class="container">
+      <div class="row">
+        <div class="footer-col">
+          <h4>Dịch vụ</h4>
+          <ul>
+            <li><a href="#">Điều khoản sử dụng</a></li>
+            <li><a href="#">Chính sản phẩm bảo mật</a></li>
+            <li><a href="#">Giới thiệu Camellia</a></li>
+            <li><a href="#">Hệ thống nhà sản phẩm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ trợ</h4>
+          <ul>
+            <li><a href="#">Chính sản phẩm đổi trả</a></li>
+            <li><a href="#">Chính sản phẩm vận chuyển</a></li>
+            <li><a href="#">Chính sản phẩm bảo hành</a></li>
+            <li><a href="#">Chính sản phẩm khách sỉ</a></li>
+            <li><a href="#">Phương thức thanh toán</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Online shop</h4>
+          <ul>
+            <li><a href="#">Hướng dẫn đặt hàng</a></li>
+            <li><a href="#">Hướng dẫn hủy đơn</a></li>
+            <li><a href="#">Liên hệ</a></li>
+            <li><a href="#">Thông báo</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>follow us</h4>
+          <div class="social-links">
+            <a href="#"><i class="fa fa-facebook-f"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+     </div>
+  </footer>
+    
+    <!-- Liquor theme -->
+      <script src="asset/js/jquery.min.js"></script>
+	  <script src="asset/js/jquery-migrate-3.0.1.min.js"></script>
+	  <script src="asset/js/popper.min.js"></script>
+	  <script src="asset/js/bootstrap.min.js"></script>
+	  <script src="asset/js/jquery.easing.1.3.js"></script>
+	  <script src="asset/js/jquery.waypoints.min.js"></script>
+	  <script src="asset/js/jquery.stellar.min.js"></script>
+	  <script src="asset/js/owl.carousel.min.js"></script>
+	  <script src="asset/js/jquery.magnific-popup.min.js"></script>
+	  <script src="asset/js/jquery.animateNumber.min.js"></script>
+	  <script src="asset/js/scrollax.min.js"></script>
+	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+	  <script src="asset/js/google-map.js"></script>
+	  <script src="asset/js/main.js"></script>
+	
+	
+	<!-- jQuery Plugins -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="js/nouislider.min.js"></script>
+	<script src="js/jquery.zoom.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+</body>
+<script>
+        window.onscroll = function () {
+            myFunction()
+        };
+
+        // Get the header
+        var header = document.getElementById("navigation");
+
+        // Get the offset position of the navbar
+        var sticky = header.offsetTop;
+
+        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+            if (window.pageYOffset > 180) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+    </script>
+<script>
+        
+         window.onload = (event) => {
+
+        	 document.getElementById("login").click();
+
+        };
+
+    
+        $(start()) = function () {
+            myFunction()
+        }
+        ;
+
+        // Get the header
+        var header = document.getElementById("navigation");
+
+        // Get the offset position of the navbar
+        var sticky = header.offsetTop;
+
+        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+
+    </script>
+
+<script>
+$(function() {
+	  $('.btn-cart').on('click', function(e) {
+	    e.preventDefault();
+	    var dropdownMenu = $(this).next('.dropdown-menu');
+	    dropdownMenu.toggleClass('show');
+	    $(this).attr('aria-expanded', dropdownMenu.hasClass('show'));
+	  });
+	});
+	
+function searchToggle(obj, evt){
+    var container = $(obj).closest('.search-wrapper');
+
+    if(!container.hasClass('active')){
+          container.addClass('active');
+          evt.preventDefault();
+    }
+    else if(container.hasClass('active') && $(obj).closest('.input-holder').length == 0){
+          container.removeClass('active');
+          // clear input
+          container.find('.search-input').val('');
+          // clear and hide result container when we press close
+          container.find('.result-container').fadeOut(100, function(){$(this).empty();});
+    }
+}
+</script>
+
+<script>
+	const form = document.getElementById('logreg-forms')
+	const account = form.getAttribute('data-account');
+	form.addEventListener("submit", function(event) {
+    	// Ngăn chặn hành vi mặc định của nút submit
+		//event.preventDefault();
+		if (account != null) {
+            $('#logreg-forms').modal('hide');
+        }
+        // Xử lý biểu mẫu !!!
+    });
+</script>
+<script>
+$(document).ready(function() {
+	  $('a[href^="#"]').on('click', function(event) {
+	    var target = $(this.getAttribute('href'));
+	    if (target.length) {
+	      event.preventDefault();
+	      $('html, body').stop().animate({
+	        scrollTop: target.offset().top
+	      }, 700, 'linear');
+	    }
+	  });
+	});
+</script>
+
+<script>
+//Khởi tạo biến sum
+let sum = 0;
+
+// Lấy tất cả các phần tử có lớp subtotal
+const subtotalDivs = document.querySelectorAll('.subtotal');
+
+// Duyệt qua từng phần tử và tính tổng các subtotal
+const subtotalArray = Array.from(subtotalDivs).map(subtotalDiv => {
+  const subtotal = parseFloat(subtotalDiv.textContent);
+  sum += subtotal;
+  return subtotal;
+});
+// Định dạng lại giá trị và hiển thị lên trang
+subtotalDivs.forEach((subtotalDiv, index) => {
+  const formattedSubtotal = (subtotalArray[index]).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  subtotalDiv.textContent = formattedSubtotal;
+});
+</script>
+
+<script>
+var btn = $('#button');
+
+$(window).scroll(function() {
+  if ($(window).scrollTop() > 300) {
+    btn.addClass('show');
+  } else {
+    btn.removeClass('show');
+  }
+});
+
+btn.on('click', function(e) {
+  e.preventDefault();
+  $('html, body').animate({scrollTop:0}, '300');
+});
+
+
+</script>
+
+</html>

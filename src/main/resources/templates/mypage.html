@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<title>CosmeticShop</title>
+
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap -->
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+		<!-- Slick -->
+		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
+		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
+
+		<!-- nouislider -->
+		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+
+		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		
+		<!-- login -->
+		<link href="css/login.css" rel="stylesheet" type="text/css"/>
+
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+		<link href="css/cartStyle.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		
+		<!-- Nav bar -->
+		<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,700;0,800;1,200;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    	<link rel="stylesheet" href="asset/css/animate.css">   
+    	<link rel="stylesheet" href="asset/css/owl.theme.default.min.css">
+	    <link rel="stylesheet" href="asset/css/owl.carousel.min.css">
+	    <link rel="stylesheet" href="asset/css/magnific-popup.css">
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+	    <link rel="stylesheet" href="asset/css/flaticon.css">
+	    <link rel="stylesheet" href="asset/css/style.css">
+	    <script src= "https://kit.fontawesome.com/2961dbb4cf.js" crossorigin="anonymous">  </script>
+		
+       <style>
+       		table thead tr th{
+       			text-align: center;
+       		}
+       </style>
+    </head>
+	<body>
+<!-- nav bar start-->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="/home" style="margin-right:300px; margin-left:-50px">Camellia <span>shop</span></a>
+	      <div class="order-lg-last btn-group">
+          <a href="#" class="btn-cart dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          	<span class="flaticon-shopping-bag"></span>
+          	<div class="d-flex justify-content-center align-items-center" th:if="${session.size!=null}"><small>[[${session.size}]]</small></div>
+          	<div class="d-flex justify-content-center align-items-center" th:if="${session.size==null}"><small>0</small></div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" th:if="${session.cart!=null}">
+          		<th:block th:each="o:${session.cart.items}" >
+				    <div class="dropdown-item d-flex align-items-start" href="#">
+				    	<div class="img" th:style="'background-image: url(&quot;' + ${o.cosmetic.image} + '&quot;);'"></div>
+				    	<div class="text pl-3">
+				    		<h4>[[${o.cosmetic.title}]]</h4>
+				    		<p class="mb-0"><a href="#" class="price subtotal">[[${o.cosmetic.price}]]</a><span class="quantity ml-3">Số lượng: [[${o.quantity}]]</span></p>
+				    	</div>
+				    </div>
+				 </th:block>
+				    
+				    <a class="dropdown-item text-center btn-link d-block w-100" href="/addcart">
+				    	Xem giỏ hàng
+				    	<span class="ion-ios-arrow-round-forward"></span>
+				    </a>
+		 </div>
+		 <div class="dropdown-menu dropdown-menu-right" th:if="${session.cart==null}">
+				    
+				    <a class="dropdown-item text-center btn-link d-block w-100 btn-cart" href="#">
+				    	Chưa có sản phẩm nào được chọn
+				    	<span class="ion-ios-arrow-round-forward"></span>
+				    </a>
+		 </div>
+        </div>
+
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	        <li class="nav-item" style="margin-right:245px; margin-top:12px"><a  class="nav-link" >
+	        <div class="search-wrapper" >
+			    <div class="input-holder">
+			    <form th:action="@{/search}">
+			        <input type="text" class="search-input" name="search"  placeholder="Tìm theo tên sản phẩm hoặc tác giả" required="1" />
+			        <button class="search-icon" onclick="searchToggle(this, event);"><span></span></button>
+			     </form>
+			    </div>
+			    <span class="close" onclick="searchToggle(this, event);"></span>
+			</div>
+	        </a></li>
+	          <li class="nav-item active"><a href="/home" class="nav-link" style="margin-left:20px; margin-right:10px">Home</a></li>
+
+	          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#category" id="dropdown04" >Danh mục</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04" >
+              <th:block th:each="o:${listC}">
+              	<a class="dropdown-item" th:href="@{'/category?id='+${o.id}}">[[${o.name}]]</a>
+              </th:block>
+              </div>
+            </li>
+	          
+	          <li class="nav-item"><a th:href="@{/loginForm}" th:if="${session.account==null}" class="nav-link">Login</a></li>
+	          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="/profile" id="dropdown04" data-toggle="dropdown" th:if="${session.account!=null}"  aria-haspopup="true" aria-expanded="false" style="margin-right:21px">[[${session.account.username}]]</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04">
+              	<a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
+              	<a class="dropdown-item" th:href="@{/mypage}">Đơn hàng</a>
+              	<a class="dropdown-item" th:href="@{/profile}">Quản lý tài khoản</a>
+              </div>
+            </li>
+            
+	        </ul>
+	      </div>
+	      
+	    </div>
+	  </nav>
+    <!-- END nav -->
+    
+    <div class="hero-wrap" style="background-image: url('/img/bg_3.jpg'); height: 220px" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-8 ftco-animate d-flex align-items-end" style="margin-bottom:130px">
+          </div>
+        </div>
+      </div>
+    </div>
+	
+<!-- 
+		<nav class="headernav"  style="border-top-color: wheat;border-bottom-color: wheat;height: 50px" id="navigation">
+		
+			<div class="container" >
+				
+				<div id="responsive-nav"  >
+					
+					<ul class="main-nav nav navbar-nav" style="margin-left: 330px">
+						<li><a style="font-weight: bold;font-size: 15px" th:href="@{/home}">Trang chủ</a></li>
+						<li class = "active" th:if="${active==1}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/mypage}">Danh sản phẩm đơn hàng</a>
+						</li>
+						<li th:if="${active!=1}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/mypage}">Danh sản phẩm đơn hàng</a>
+						</li>
+                           
+						<li class = "active" th:if="${active==2}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/Ordered}">Đã xác nhận</a>
+						</li>
+						
+						<li th:if="${active!=2}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/Ordered}">Đã xác nhận</a>
+						</li>
+						
+						<li class = "active" th:if="${active==3}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/orderDeleted}">Đã hủy đặt</a>
+						</li>
+						
+						<li th:if="${active!=3}">
+							<a style="font-weight: bold;font-size: 15px" th:href="@{/orderDeleted}">Đã hủy đặt</a>
+						</li>
+		
+					</ul>
+					
+				</div>
+			
+			</div>
+			
+		</nav> -->
+
+   
+   <!-- My Account Start -->
+        <div class="my-account">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link" href="/home" role="tab"><i class="fa fa-home"></i>Trang chủ</a>
+                            <a class="nav-link active" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag"></i>Chưa xác nhận</a>
+                            <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><i class="fa fa-map-marker-alt"></i>Đã xác nhận</a>
+                            <a class="nav-link" id="payment-nav" data-toggle="pill" href="#payment-tab" role="tab"><i class="fa fa-times"></i>Đã hủy</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
+                                <div class="table-responsive">
+                                <h4>Chưa xác nhận</h4>
+                                    <table class="table table-bordered table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Ngày đặt</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Chi Tiết / Hủy Đặt</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="align-middle">
+                                        <tr th:each="o:${listO}" style="text-align: center">
+                                            <td><p>[[${o.day}]]</p></td>
+                                            <td>[[${o.quantity}]]</td>
+                                            <td><p class="subtotal">[[${o.totalMoney}]]</p></td>
+                                            <td><div >Chưa xác nhận</div></td>
+                                            
+                                            <td style="display: flex; justify-content: center;">
+											  <div style="margin-right:40px;" class="cart-btn">
+											    <a th:href="@{'/OrderDetail?oid=' + ${o.id}}" class="btn btn-success" style="font-weight: bold"><i class="fa fa-eye" style="margin-right: 10px"></i>Xem</a>
+											  </div>
+											  <div>
+											    <a th:href="@{'/delete/Order?oid=' + ${o.id}}" onclick=" return confirm('Bạn có chắc chắn muốn hủy?')" style="margin-left: 10px;font-weight: bold" class="btn btn-danger "><i class="fa fa-minus-circle" style="margin-right: 10px"></i>Hủy</a>
+											  </div>
+											</td>
+
+                                        </tr>
+                     
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="address-tab" role="tabpanel" aria-labelledby="address-nav">
+                                <h4>Đã xác nhận</h4>
+                                    <table class="table table-bordered table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Ngày đặt</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Chi Tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="align-middle">
+                                        <tr th:each="o:${listA}" style="text-align: center">
+                                            <td><p>[[${o.day}]]</p></td>
+                                            <td>[[${o.quantity}]]</td>
+                                            <td><p class="subtotal">[[${o.totalMoney}]]</p></td>
+                                            <td><div >Đã xác nhận</div></td>
+                                            
+                                            <td style="display: flex; justify-content: center;">
+											  <div style="margin-right:40px;" class="cart-btn">
+											    <a th:href="@{'/OrderDetail?oid=' + ${o.id}}" class="btn btn-success" style="font-weight: bold"><i class="fa fa-eye" style="margin-right: 10px"></i>Xem</a>
+											  </div>
+											</td>
+
+                                        </tr>
+                     
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="payment-tab" role="tabpanel" aria-labelledby="payment-nav">
+                                <h4>Đã hủy</h4>
+                                <table class="table table-bordered table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Ngày đặt</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Xem lại</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="align-middle">
+                                        <tr th:each="o:${listHuy}" style="text-align: center">
+                                            <td><p>[[${o.day}]]</p></td>
+                                            <td>[[${o.quantity}]]</td>
+                                            <td><p class="subtotal">[[${o.totalMoney}]]</p></td>
+                                            <td><div >Đã hủy</div></td>
+
+											<td style="display: flex; justify-content: center;">
+											  <div style="margin-right:40px;" class="cart-btn">
+											    <a th:href="@{'/OrderDetail?oid=' + ${o.id}}" class="btn btn-success" style="font-weight: bold"><i class="fa fa-eye" style="margin-right: 10px"></i>Xem lại</a>
+											  </div>
+											  
+											</td>
+
+                                        </tr>
+                     
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- My Account End -->
+        
+        
+
+	<footer class="footer">
+     <div class="container">
+      <div class="row">
+        <div class="footer-col">
+          <h4>Dịch vụ</h4>
+          <ul>
+            <li><a href="#">Điều khoản sử dụng</a></li>
+            <li><a href="#">Chính sản phẩm bảo mật</a></li>
+            <li><a href="#">Giới thiệu Camellia</a></li>
+            <li><a href="#">Hệ thống nhà sản phẩm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ trợ</h4>
+          <ul>
+            <li><a href="#">Chính sản phẩm đổi trả</a></li>
+            <li><a href="#">Chính sản phẩm vận chuyển</a></li>
+            <li><a href="#">Chính sản phẩm bảo hành</a></li>
+            <li><a href="#">Chính sản phẩm khách sỉ</a></li>
+            <li><a href="#">Phương thức thanh toán</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Online shop</h4>
+          <ul>
+            <li><a href="#">Hướng dẫn đặt hàng</a></li>
+            <li><a href="#">Hướng dẫn hủy đơn</a></li>
+            <li><a href="#">Liên hệ</a></li>
+            <li><a href="#">Thông báo</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>follow us</h4>
+          <div class="social-links">
+            <a href="#"><i class="fa fa-facebook-f"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+     </div>
+  </footer>
+ 
+
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="asset/lib/easing/easing.min.js"></script>
+        <script src="asset/lib/slick/slick.min.js"></script>
+        
+        <!-- Template Javascript -->
+        <script src="asset/js/main.js"></script>
+        
+        
+        <!-- Liquor theme -->
+      <script src="asset/js/jquery.min.js"></script>
+	  <script src="asset/js/jquery-migrate-3.0.1.min.js"></script>
+	  <script src="asset/js/popper.min.js"></script>
+	  <script src="asset/js/bootstrap.min.js"></script>
+	  <script src="asset/js/jquery.easing.1.3.js"></script>
+	  <script src="asset/js/jquery.waypoints.min.js"></script>
+	  <script src="asset/js/jquery.stellar.min.js"></script>
+	  <script src="asset/js/owl.carousel.min.js"></script>
+	  <script src="asset/js/jquery.magnific-popup.min.js"></script>
+	  <script src="asset/js/jquery.animateNumber.min.js"></script>
+	  <script src="asset/js/scrollax.min.js"></script>
+	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+	  <script src="asset/js/google-map.js"></script>
+	  <script src="asset/js/main.js"></script>
+  
+	</body>
+<script>
+$(function() {
+	  $('.btn-cart').on('click', function(e) {
+	    e.preventDefault();
+	    var dropdownMenu = $(this).next('.dropdown-menu');
+	    dropdownMenu.toggleClass('show');
+	    $(this).attr('aria-expanded', dropdownMenu.hasClass('show'));
+	  });
+	});
+</script>	
+
+
+ <script>
+	
+function searchToggle(obj, evt){
+    var container = $(obj).closest('.search-wrapper');
+
+    if(!container.hasClass('active')){
+          container.addClass('active');
+          evt.preventDefault();
+    }
+    else if(container.hasClass('active') && $(obj).closest('.input-holder').length == 0){
+          container.removeClass('active');
+          // clear input
+          container.find('.search-input').val('');
+          // clear and hide result container when we press close
+          container.find('.result-container').fadeOut(100, function(){$(this).empty();});
+    }
+}
+</script>
+
+<script>
+//Khởi tạo biến sum
+let sum = 0;
+
+// Lấy tất cả các phần tử có lớp subtotal
+const subtotalDivs = document.querySelectorAll('.subtotal');
+
+// Duyệt qua từng phần tử và tính tổng các subtotal
+const subtotalArray = Array.from(subtotalDivs).map(subtotalDiv => {
+  const subtotal = parseFloat(subtotalDiv.textContent);
+  sum += subtotal;
+  return subtotal;
+});
+// Định dạng lại giá trị và hiển thị lên trang
+subtotalDivs.forEach((subtotalDiv, index) => {
+  const formattedSubtotal = (subtotalArray[index]).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  subtotalDiv.textContent = formattedSubtotal;
+});
+</script>
+</html>
