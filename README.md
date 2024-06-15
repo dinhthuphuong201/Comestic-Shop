@@ -1,2 +1,2 @@
 Cosmetic Ecommerce Store
-Using Springboot
+Using Springboot, MySQL
